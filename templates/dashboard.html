@@ -8,70 +8,217 @@
   <!-- Google Fonts: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f4f8;
+      color: #333;
+    }
+
+    .header-center {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #2e7d32;
+    }
+
+    .header-center .logo {
+      height: 60px;
+    }
+
+    .renewable-container {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+
+    .form-section, .table-section {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    #taskForm {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #taskForm input, #taskForm select, #taskForm button {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    #taskForm button {
+      background-color: #2e7d32;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+    }
+
+    #taskForm button:hover {
+      background-color: #1b5e20;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .priority-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header-center" role="banner">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="GreenScheduler Logo" class="logo" />
+  <header class="header-center">
+    <img src="logo.png" alt="GreenScheduler Logo" class="logo" />
   </header>
 
-  <!-- Renewable Status -->
-  <div class="renewable-container" aria-live="polite" aria-atomic="true" aria-label="Current simulated renewable percentage">
+  <div class="renewable-container" aria-live="polite" aria-atomic="true">
     <strong>Current Renewable Energy :</strong>
-    <span id="renewable">--</span> 
+    <span id="renewable">--</span> %
   </div>
 
-  <!-- Task Form -->
-  <section aria-labelledby="formTitle" style="width: 100%; max-width: 900px; margin: auto;">
-    <h3 id="formTitle">Add Task</h3>
-    <form id="taskForm" class="form-container" onsubmit="event.preventDefault(); addTask();">
-      <input
-        type="text"
-        id="name"
-        placeholder="Task Name"
-        aria-label="Task Name"
-        required
-        autocomplete="off"
-        maxlength="50"
-      />
-      <input
-        type="number"
-        id="duration"
-        placeholder="Duration (hrs)"
-        aria-label="Duration in hours"
-        min="0.1"
-        step="0.1"
-        required
-      />
-      <select id="priority" aria-label="Priority">
+  <section class="form-section">
+    <h3>Add Task</h3>
+    <form id="taskForm">
+      <input type="text" id="name" placeholder="Task Name" required maxlength="50" />
+      <input type="number" id="duration" placeholder="Duration (hrs)" min="0.1" step="0.1" required />
+      <select id="priority">
         <option value="High">High Priority</option>
         <option value="Medium" selected>Medium Priority</option>
         <option value="Low">Low Priority</option>
       </select>
-      <button type="submit" aria-label="Add Task">Add Task</button>
+      <button type="submit">Add Task</button>
     </form>
   </section>
 
-  <!-- Task List -->
-  <section aria-labelledby="tasksTitle" style="width: 100%; max-width: 900px; margin: auto;">
-    <h3 id="tasksTitle">All Tasks</h3>
-    <div class="table-container" role="region" aria-live="polite" aria-label="List of tasks">
-      <table id="taskTable" summary="List of tasks with their duration and priority">
-        <thead>
-          <tr>
-            <th scope="col">Task Name</th>
-            <th scope="col">Duration (hrs)</th>
-            <th scope="col">Priority</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="3" style="color:#777; font-style:italic;">No tasks added yet.</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <section class="table-section">
+    <h3>All Tasks</h3>
+    <table id="taskTable">
+      <thead>
+        <tr>
+          <th>Task Name</th>
+          <th>Duration (hrs)</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="3" style="color:#777; font-style:italic;">No tasks added yet.</td></tr>
+      </tbody>
+    </table>
   </section>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+  <script>
+    function updateRenewable() {
+      const renewableEl = document.getElementById("renewable");
+      if (!renewableEl) return;
+
+      const percentage = Math.floor(Math.random() * 60) + 30;
+      renewableEl.textContent = percentage + " %";
+
+      if (percentage >= 60) {
+        renewableEl.style.color = "green";
+      } else if (percentage >= 40) {
+        renewableEl.style.color = "orange";
+      } else {
+        renewableEl.style.color = "red";
+      }
+    }
+    setInterval(updateRenewable, 3000);
+    updateRenewable();
+
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    function renderTasks() {
+      const tbody = document.querySelector("#taskTable tbody");
+      tbody.innerHTML = "";
+
+      if (tasks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:#777; font-style:italic;">No tasks added yet.</td></tr>';
+        return;
+      }
+
+      tasks.forEach(task => {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = task.name;
+        row.appendChild(nameCell);
+
+        const durationCell = document.createElement("td");
+        durationCell.textContent = parseFloat(task.duration).toFixed(1);
+        row.appendChild(durationCell);
+
+        const priorityCell = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = "priority-badge";
+        badge.textContent = task.priority;
+
+        switch(task.priority){
+          case "High": badge.style.backgroundColor = "red"; break;
+          case "Medium": badge.style.backgroundColor = "orange"; break;
+          case "Low": badge.style.backgroundColor = "green"; break;
+        }
+        priorityCell.appendChild(badge);
+        row.appendChild(priorityCell);
+
+        tbody.appendChild(row);
+      });
+    }
+
+    function addTask() {
+      const nameInput = document.getElementById("name");
+      const durationInput = document.getElementById("duration");
+      const priorityInput = document.getElementById("priority");
+
+      const name = nameInput.value.trim();
+      const duration = durationInput.value.trim();
+      const priority = priorityInput.value;
+
+      if (!name || !duration || isNaN(duration) || Number(duration) <= 0) {
+        alert("Please enter a valid task name and duration greater than 0.");
+        return;
+      }
+
+      tasks.push({ name, duration: Number(duration), priority });
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
+      nameInput.value = "";
+      durationInput.value = "";
+      priorityInput.value = "Medium";
+      nameInput.focus();
+
+      renderTasks();
+    }
+
+    document.getElementById("taskForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      addTask();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderTasks();
+      updateRenewable();
+    });
+  </script>
 </body>
 </html>
