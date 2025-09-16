@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GreenScheduler Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin:auto; }
+    .green { color: green; }
+    .red { color: darkred; }
+    .task { padding:6px 0; border-bottom:1px solid #eee; }
+  </style>
+</head>
+<body>
+  <h1>🌱 GreenScheduler</h1>
+  <div>
+    <strong>Current simulated renewable %:</strong>
+    <span id="renewable">--</span> %
+  </div>
+
+  <h3>Submit Task</h3>
+  <form id="taskForm">
+    <input id="name" placeholder="Task name" required>
+    <label><input type="checkbox" id="urgent"> Urgent</label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h3>Tasks</h3>
+  <div id="tasks"></div>
+
+<script>
+async function fetchRenewable(){
+  try {
+    let res = await fetch('/renewable');
+    let j = await res.json();
+    document.getElementById('renewable').textContent = j.renewable;
+  } catch(e){ console.error(e); }
+}
+
+async function fetchTasks(){
+  try {
+    let res = await fetch('/tasks');
+    let tasks = await res.json();
+    let html = '';
+    tasks.reverse().forEach(t => {
+      html += `<div class="task">
+        <strong>${t.name}</strong> — <span class="${t.status==='completed'?'green':t.status==='running'?'green':'red'}">${t.status}</span>
+        <div>Created: ${t.created_at || t.created_at}</div>
+        ${t.started_at_readable ? <div>Started: ${t.started_at_readable}</div>: ''}
+        ${t.completed_at ? <div>Completed: ${t.completed_at}</div> : ''}
+      </div>`;
+    });
+    document.getElementById('tasks').innerHTML = html;
+  } catch(e){ console.error(e); }
+}
+
+document.getElementById('taskForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  let name = document.getElementById('name').value;
+  let urgent = document.getElementById('urgent').checked;
+  await fetch('/submit-task', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({name, urgent})
+  });
+  document.getElementById('name').value = '';
+  document.getElementById('urgent').checked = false;
+  fetchTasks();
+});
+
+fetchRenewable();
+fetchTasks();
+setInterval(fetchRenewable, 3000);
+setInterval(fetchTasks, 3000);
+</script>
+</body>
+</html>

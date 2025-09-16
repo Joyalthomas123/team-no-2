@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GreenScheduler Dashboard</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header-center" role="banner">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="GreenScheduler Logo" class="logo" />
+  </header>
+
+  <!-- Renewable Status -->
+  <div class="renewable-container" aria-live="polite" aria-atomic="true" aria-label="Current simulated renewable percentage">
+    <strong>Current Renewable Energy :</strong>
+    <span id="renewable">--</span> 
+  </div>
+
+  <!-- Task Form -->
+  <section aria-labelledby="formTitle" style="width: 100%; max-width: 900px; margin: auto;">
+    <h3 id="formTitle">Add Task</h3>
+    <form id="taskForm" class="form-container" onsubmit="event.preventDefault(); addTask();">
+      <input
+        type="text"
+        id="name"
+        placeholder="Task Name"
+        aria-label="Task Name"
+        required
+        autocomplete="off"
+        maxlength="50"
+      />
+      <input
+        type="number"
+        id="duration"
+        placeholder="Duration (hrs)"
+        aria-label="Duration in hours"
+        min="0.1"
+        step="0.1"
+        required
+      />
+      <select id="priority" aria-label="Priority">
+        <option value="High">High Priority</option>
+        <option value="Medium" selected>Medium Priority</option>
+        <option value="Low">Low Priority</option>
+      </select>
+      <button type="submit" aria-label="Add Task">Add Task</button>
+    </form>
+  </section>
+
+  <!-- Task List -->
+  <section aria-labelledby="tasksTitle" style="width: 100%; max-width: 900px; margin: auto;">
+    <h3 id="tasksTitle">All Tasks</h3>
+    <div class="table-container" role="region" aria-live="polite" aria-label="List of tasks">
+      <table id="taskTable" summary="List of tasks with their duration and priority">
+        <thead>
+          <tr>
+            <th scope="col">Task Name</th>
+            <th scope="col">Duration (hrs)</th>
+            <th scope="col">Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3" style="color:#777; font-style:italic;">No tasks added yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

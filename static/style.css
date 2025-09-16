@@ -1,0 +1,252 @@
+  /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f7ea, #f0faf1);
+      color: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header */
+    header.header-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0 10px 0;
+      width: 100%;
+      max-width: 900px;
+    }
+    header.header-center .logo {
+      width: 220px;
+      height: auto;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    header.header-center .logo:hover {
+      transform: scale(1.05);
+    }
+
+    /* Title with emoji bounce */
+    h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin: 0 0 0.3em 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      user-select: none;
+      color: #27ae60;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    h1 span.emoji {
+      font-size: 2.8rem;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Renewable container */
+    .renewable-container {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(39, 174, 96, 0.1);
+      font-size: 1.3rem;
+      font-weight: 500;
+      display: inline-block;
+      margin: 20px auto 40px auto;
+      transition: transform 0.3s ease;
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      user-select: none;
+    }
+    .renewable-container:hover {
+      transform: translateY(-3px);
+    }
+    .renewable-container strong {
+      color: #27ae60;
+    }
+    .renewable-container #renewable {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #27ae60;
+      margin-left: 10px;
+    }
+
+    /* Form container */
+    form#taskForm.form-container {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgb(39 174 96 / 0.15);
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      margin-bottom: 40px;
+    }
+    form#taskForm.form-container:hover {
+      box-shadow: 0 12px 30px rgb(39 174 96 / 0.25);
+      transform: translateY(-3px);
+    }
+
+    form#taskForm input[type="text"],
+    form#taskForm input[type="number"],
+    form#taskForm select {
+      flex: 1 1 180px;
+      padding: 14px 18px;
+      border: 2px solid #27ae60;
+      border-radius: 30px;
+      font-size: 1rem;
+      color: #2c3e50;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline-offset: 2px;
+      user-select: text;
+    }
+    form#taskForm input[type="text"]:focus,
+    form#taskForm input[type="number"]:focus,
+    form#taskForm select:focus {
+      border-color: #2ecc71;
+      box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+      outline: none;
+    }
+    form#taskForm input[type="number"]::-webkit-inner-spin-button,
+    form#taskForm input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    form#taskForm button {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+      user-select: none;
+    }
+    form#taskForm button:hover,
+    form#taskForm button:focus {
+      background: #2ecc71;
+      box-shadow: 0 6px 18px rgba(46, 204, 113, 0.5);
+      outline: none;
+    }
+    form#taskForm button:active {
+      transform: scale(0.98);
+    }
+
+    /* Table container */
+    .table-container {
+      width: 100%;
+      max-width: 900px;
+      overflow-x: auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(39, 174, 96, 0.15);
+      background: #fff;
+      user-select: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 1rem;
+      min-width: 400px;
+    }
+    thead tr {
+      background: #27ae60;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+      border-bottom: 1px solid #d9e6d9;
+      transition: background-color 0.3s ease;
+    }
+    tbody tr:hover {
+      background-color: #e6f4ea;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f6fcf6;
+    }
+
+    /* Priority badges */
+    .priority-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      user-select: none;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+    .priority-High {
+      background-color: #d9534f; /* red */
+      box-shadow: 0 0 8px #d9534faa;
+    }
+    .priority-Medium {
+      background-color: #f0ad4e; /* orange */
+      box-shadow: 0 0 8px #f0ad4eaa;
+    }
+    .priority-Low {
+      background-color: #5cb85c; /* green */
+      box-shadow: 0 0 8px #5cb85caa;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      form#taskForm.form-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      form#taskForm input[type="text"],
+      form#taskForm input[type="number"],
+      form#taskForm select,
+      form#taskForm button {
+        flex: 1 1 100%;
+      }
+      table {
+        font-size: 0.9rem;
+      }
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 30px 15px;
+      }
+      header.header-center {
+        padding: 15px 0 10px 0;
+      }
+      .renewable-container {
+        font-size: 1.1rem;
+        padding: 15px 20px;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+    }
